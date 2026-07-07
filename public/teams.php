@@ -46,7 +46,11 @@ $total_teams = $result ? $result->num_rows : 0;
 <a href="drivers.php">Drivers</a> |
 <a href="races.php">Races</a> |
 <a href="circuits.php">Circuits</a> |
-<a href="sponsors.php">Sponsors</a>
+<a href="sponsors.php">Sponsors</a> |
+<a href="seasons.php">Seasons</a> |
+<a href="contracts.php">Contracts</a> |
+<a href="driver_standings.php">Driver Standings</a> |
+<a href="team_standings.php">Team Standings</a>
 
 <hr>
 
@@ -75,13 +79,13 @@ $total_teams = $result ? $result->num_rows : 0;
     <?php if ($result && $result->num_rows > 0): ?>
         <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><b><?php echo $row['team_name']; ?></b></td>
-                <td><?php echo $row['country']; ?></td>
-                <td><?php echo $row['team_principal']; ?></td>
-                <td><?php echo $row['founded_year']; ?></td>
-                <td><?php echo $row['engine_supplier']; ?></td>
-                <td><?php echo $row['total_drivers']; ?></td>
-                <td><?php echo $row['total_points']; ?></td>
+                <td><b><?php echo htmlspecialchars($row['team_name']); ?></b></td>
+                <td><?php echo htmlspecialchars($row['country']); ?></td>
+                <td><?php echo htmlspecialchars($row['team_principal']); ?></td>
+                <td><?php echo htmlspecialchars($row['founded_year']); ?></td>
+                <td><?php echo htmlspecialchars($row['engine_supplier']); ?></td>
+                <td><?php echo htmlspecialchars($row['total_drivers']); ?></td>
+                <td><?php echo htmlspecialchars($row['total_points']); ?></td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>

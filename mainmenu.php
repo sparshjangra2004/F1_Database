@@ -18,6 +18,8 @@
     <li><a href="public/races.php">Races</a></li>
     <li><a href="public/circuits.php">Circuits</a></li>
     <li><a href="public/sponsors.php">Sponsors</a></li>
+    <li><a href="public/seasons.php">Seasons</a></li>
+    <li><a href="public/contracts.php">Contracts</a></li>
 </ul>
 <hr>
 <h2> Championship Analytics</h2>

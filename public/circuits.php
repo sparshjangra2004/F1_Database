@@ -34,20 +34,23 @@ $total_circuits = $result ? $result->num_rows : 0;
 </head>
 <body>
 
-<!-- System Header -->
 <center>
     <h1><a href="../mainmenu.php">F1</a></h1>
 </center>
 
 <hr>
 
-<!-- Navigation -->
+
 <h3>Navigation</h3>
 <a href="teams.php">Teams</a> |
 <a href="drivers.php">Drivers</a> |
 <a href="races.php">Races</a> |
 <a href="circuits.php">Circuits</a> |
-<a href="sponsors.php">Sponsors</a>
+<a href="sponsors.php">Sponsors</a> |
+<a href="seasons.php">Seasons</a> |
+<a href="contracts.php">Contracts</a> |
+<a href="driver_standings.php">Driver Standings</a> |
+<a href="team_standings.php">Team Standings</a>
 
 <hr>
 
@@ -76,13 +79,13 @@ $total_circuits = $result ? $result->num_rows : 0;
     <?php if ($result && $result->num_rows > 0): ?>
         <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><b><?php echo $row['circuit_name']; ?></b></td>
-                <td><?php echo $row['country']; ?></td>
-                <td><?php echo $row['length_km']; ?></td>
-                <td><?php echo $row['turns']; ?></td>
-                <td><?php echo $row['lap_record'] ?? 'N/A'; ?></td>
-                <td><?php echo $row['total_races']; ?></td>
-                <td><?php echo $row['last_race_year'] ?? 'N/A'; ?></td>
+                <td><b><?php echo htmlspecialchars($row['circuit_name']); ?></b></td>
+                <td><?php echo htmlspecialchars($row['country']); ?></td>
+                <td><?php echo htmlspecialchars($row['length_km']); ?></td>
+                <td><?php echo htmlspecialchars($row['turns']); ?></td>
+                <td><?php echo htmlspecialchars($row['lap_record'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['total_races']); ?></td>
+                <td><?php echo htmlspecialchars($row['last_race_year'] ?? 'N/A'); ?></td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>

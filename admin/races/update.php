@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE race_id = ?
         ");
 
-        $update->bind_param("ssiissi",
+        $update->bind_param("ssiisii",
             $race_name,
             $race_date,
             $season_id,
@@ -89,18 +89,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <label>Race Name:</label><br>
     <input type="text" name="race_name"
-           value="<?php echo $race['race_name']; ?>" required><br><br>
+           value="<?php echo htmlspecialchars($race['race_name']); ?>" required><br><br>
 
     <label>Race Date:</label><br>
     <input type="date" name="race_date"
-           value="<?php echo $race['race_date']; ?>" required><br><br>
+           value="<?php echo htmlspecialchars($race['race_date']); ?>" required><br><br>
 
     <label>Season:</label><br>
     <select name="season_id" required>
         <?php while ($season = $seasons->fetch_assoc()): ?>
             <option value="<?php echo $season['season_id']; ?>"
                 <?php if ($race['season_id'] == $season['season_id']) echo "selected"; ?>>
-                <?php echo $season['year']; ?>
+                <?php echo htmlspecialchars($season['year']); ?>
             </option>
         <?php endwhile; ?>
     </select><br><br>
@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php while ($circuit = $circuits->fetch_assoc()): ?>
             <option value="<?php echo $circuit['circuit_id']; ?>"
                 <?php if ($race['circuit_id'] == $circuit['circuit_id']) echo "selected"; ?>>
-                <?php echo $circuit['circuit_name']; ?>
+                <?php echo htmlspecialchars($circuit['circuit_name']); ?>
             </option>
         <?php endwhile; ?>
     </select><br><br>
@@ -124,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <label>Laps:</label><br>
     <input type="number" name="laps"
-           value="<?php echo $race['laps']; ?>" required><br><br>
+           value="<?php echo htmlspecialchars($race['laps']); ?>" required><br><br>
 
     <button type="submit">Update Race</button>
 

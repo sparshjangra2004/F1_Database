@@ -2,11 +2,16 @@
 require_once '../auth.php';
 require_once '../../config/dbconn.php';
 
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    die("Invalid request method.");
+}
+
+
+if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
     die("Invalid Race ID.");
 }
 
-$race_id = intval($_GET['id']);
+$race_id = intval($_POST['id']);
 
 $stmt = $conn->prepare("DELETE FROM Races WHERE race_id = ?");
 $stmt->bind_param("i", $race_id);

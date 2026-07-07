@@ -8,19 +8,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 
 if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
-    die("Invalid ID.");
+    die("Invalid Result ID.");
 }
 
-$id = intval($_POST['id']);
+$result_id = intval($_POST['id']);
 
-$stmt = $conn->prepare("DELETE FROM Team_Sponsors WHERE team_sponsor_id = ?");
-$stmt->bind_param("i", $id);
+$stmt = $conn->prepare("DELETE FROM Results WHERE result_id = ?");
+$stmt->bind_param("i", $result_id);
 
 if ($stmt->execute()) {
     header("Location: list.php");
     exit();
 } else {
-    echo "Error deleting.";
+    echo "Error deleting result.";
 }
 
 $stmt->close();

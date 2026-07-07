@@ -3,29 +3,25 @@ require_once '../config/dbconn.php';
 
 $query = "
     SELECT
-        s.sponsor_id,
+        ts.team_sponsor_id,
+        t.team_name,
         s.sponsor_name,
-        s.industry,
-        s.country,
-        COUNT(ts.team_id) AS total_teams
-    FROM Sponsors s
-    LEFT JOIN Team_Sponsors ts ON s.sponsor_id = ts.sponsor_id
-    GROUP BY
-        s.sponsor_id,
-        s.sponsor_name,
-        s.industry,
-        s.country
-    ORDER BY s.sponsor_name ASC
+        ts.contract_start,
+        ts.contract_end
+    FROM Team_Sponsors ts
+    JOIN Teams t ON ts.team_id = t.team_id
+    JOIN Sponsors s ON ts.sponsor_id = s.sponsor_id
+    ORDER BY t.team_name ASC
 ";
 
 $result = $conn->query($query);
-$total_sponsors = $result ? $result->num_rows : 0;
+$total_contracts = $result ? $result->num_rows : 0;
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sponsors - F1 Championship</title>
+    <title>Contracts - F1 Championship</title>
 </head>
 <body>
 
@@ -49,36 +45,36 @@ $total_sponsors = $result ? $result->num_rows : 0;
 <hr>
 
 <center>
-    <h2>Sponsors Overview</h2>
+    <h2>Team-Sponsor Contracts</h2>
 </center>
 
 <fieldset>
     <legend><b>Summary</b></legend>
-    <p><b>Total Sponsors:</b> <?php echo $total_sponsors; ?></p>
+    <p><b>Total Contracts:</b> <?php echo $total_contracts; ?></p>
 </fieldset>
 
 <br>
 
 <table border="1" cellpadding="10" cellspacing="0" width="100%">
     <tr>
+        <th>Team</th>
         <th>Sponsor</th>
-        <th>Industry</th>
-        <th>Country</th>
-        <th>Teams Sponsored</th>
+        <th>Contract Start</th>
+        <th>Contract End</th>
     </tr>
 
     <?php if ($result && $result->num_rows > 0): ?>
         <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><b><?php echo htmlspecialchars($row['sponsor_name']); ?></b></td>
-                <td><?php echo htmlspecialchars($row['industry']); ?></td>
-                <td><?php echo htmlspecialchars($row['country']); ?></td>
-                <td><?php echo htmlspecialchars($row['total_teams']); ?></td>
+                <td><b><?php echo htmlspecialchars($row['team_name']); ?></b></td>
+                <td><?php echo htmlspecialchars($row['sponsor_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['contract_start']); ?></td>
+                <td><?php echo htmlspecialchars($row['contract_end']); ?></td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>
         <tr>
-            <td colspan="4">No sponsors found.</td>
+            <td colspan="4">No contracts found.</td>
         </tr>
     <?php endif; ?>
 

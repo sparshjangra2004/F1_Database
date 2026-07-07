@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <option value="">-- Select Season --</option>
         <?php while ($season = $seasons->fetch_assoc()): ?>
             <option value="<?php echo $season['season_id']; ?>">
-                <?php echo $season['year']; ?>
+                <?php echo htmlspecialchars($season['year']); ?>
             </option>
         <?php endwhile; ?>
     </select><br><br>
@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <option value="">-- Select Circuit --</option>
         <?php while ($circuit = $circuits->fetch_assoc()): ?>
             <option value="<?php echo $circuit['circuit_id']; ?>">
-                <?php echo $circuit['circuit_name']; ?>
+                <?php echo htmlspecialchars($circuit['circuit_name']); ?>
             </option>
         <?php endwhile; ?>
     </select><br><br>

@@ -79,19 +79,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <form method="POST">
 
     <label>Team Name:</label><br>
-    <input type="text" name="team_name" value="<?php echo $team['team_name']; ?>" required><br><br>
+    <input type="text" name="team_name" value="<?php echo htmlspecialchars($team['team_name']); ?>" required><br><br>
 
     <label>Country:</label><br>
-    <input type="text" name="country" value="<?php echo $team['country']; ?>" required><br><br>
+    <input type="text" name="country" value="<?php echo htmlspecialchars($team['country']); ?>" required><br><br>
 
     <label>Team Principal:</label><br>
-    <input type="text" name="team_principal" value="<?php echo $team['team_principal']; ?>" required><br><br>
+    <input type="text" name="team_principal" value="<?php echo htmlspecialchars($team['team_principal']); ?>" required><br><br>
 
     <label>Founded Year:</label><br>
-    <input type="number" name="founded_year" value="<?php echo $team['founded_year']; ?>" required><br><br>
+    <input type="number" name="founded_year" value="<?php echo htmlspecialchars($team['founded_year']); ?>" required><br><br>
 
     <label>Engine Supplier:</label><br>
-    <input type="text" name="engine_supplier" value="<?php echo $team['engine_supplier']; ?>" required><br><br>
+    <input type="text" name="engine_supplier" value="<?php echo htmlspecialchars($team['engine_supplier']); ?>" required><br><br>
 
     <button type="submit">Update Team</button>
 

@@ -15,12 +15,16 @@ require_once '../config/dbconn.php';
     <li><a href="teams/list.php">Manage Teams</a></li>
     <li><a href="drivers/list.php">Manage Drivers</a></li>
     <li><a href="races/list.php">Manage Races</a></li>
+    <li><a href="seasons/list.php">Manage Seasons</a></li>
+    <li><a href="circuits/list.php">Manage Circuits</a></li>
     <li><a href="sponsors/list.php">Manage Sponsors</a></li>
     <li><a href = "team_sponsor/list.php">Manage Contracts</a></li>
+    <li><a href="results/list.php">Manage Results</a></li>
+    <li><a href="admins/list.php">Manage Editors</a></li>
 </ul>
 <hr>
 
-<a href= "../mainmenu.php">MAIN MENU<a>
+<a href="../mainmenu.php">MAIN MENU</a>
 <hr>
 <a href="logout.php">Logout</a>
 

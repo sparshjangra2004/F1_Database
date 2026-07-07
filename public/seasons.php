@@ -3,29 +3,27 @@ require_once '../config/dbconn.php';
 
 $query = "
     SELECT
-        s.sponsor_id,
-        s.sponsor_name,
-        s.industry,
-        s.country,
-        COUNT(ts.team_id) AS total_teams
-    FROM Sponsors s
-    LEFT JOIN Team_Sponsors ts ON s.sponsor_id = ts.sponsor_id
+        s.season_id,
+        s.year,
+        s.total_races,
+        COUNT(r.race_id) AS races_held
+    FROM Seasons s
+    LEFT JOIN Races r ON s.season_id = r.season_id
     GROUP BY
-        s.sponsor_id,
-        s.sponsor_name,
-        s.industry,
-        s.country
-    ORDER BY s.sponsor_name ASC
+        s.season_id,
+        s.year,
+        s.total_races
+    ORDER BY s.year DESC
 ";
 
 $result = $conn->query($query);
-$total_sponsors = $result ? $result->num_rows : 0;
+$total_seasons = $result ? $result->num_rows : 0;
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sponsors - F1 Championship</title>
+    <title>Seasons - F1 Championship</title>
 </head>
 <body>
 
@@ -49,36 +47,34 @@ $total_sponsors = $result ? $result->num_rows : 0;
 <hr>
 
 <center>
-    <h2>Sponsors Overview</h2>
+    <h2>Seasons Overview</h2>
 </center>
 
 <fieldset>
     <legend><b>Summary</b></legend>
-    <p><b>Total Sponsors:</b> <?php echo $total_sponsors; ?></p>
+    <p><b>Total Seasons:</b> <?php echo $total_seasons; ?></p>
 </fieldset>
 
 <br>
 
 <table border="1" cellpadding="10" cellspacing="0" width="100%">
     <tr>
-        <th>Sponsor</th>
-        <th>Industry</th>
-        <th>Country</th>
-        <th>Teams Sponsored</th>
+        <th>Year</th>
+        <th>Planned Races</th>
+        <th>Races Held</th>
     </tr>
 
     <?php if ($result && $result->num_rows > 0): ?>
         <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><b><?php echo htmlspecialchars($row['sponsor_name']); ?></b></td>
-                <td><?php echo htmlspecialchars($row['industry']); ?></td>
-                <td><?php echo htmlspecialchars($row['country']); ?></td>
-                <td><?php echo htmlspecialchars($row['total_teams']); ?></td>
+                <td><b><?php echo htmlspecialchars($row['year']); ?></b></td>
+                <td><?php echo htmlspecialchars($row['total_races']); ?></td>
+                <td><?php echo htmlspecialchars($row['races_held']); ?></td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>
         <tr>
-            <td colspan="4">No sponsors found.</td>
+            <td colspan="3">No seasons found.</td>
         </tr>
     <?php endif; ?>
 

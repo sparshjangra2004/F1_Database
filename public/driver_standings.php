@@ -55,7 +55,11 @@ $position = 1;
 <a href="drivers.php">Drivers</a> |
 <a href="races.php">Races</a> |
 <a href="circuits.php">Circuits</a> |
-<a href="sponsors.php">Sponsors</a>
+<a href="sponsors.php">Sponsors</a> |
+<a href="seasons.php">Seasons</a> |
+<a href="contracts.php">Contracts</a> |
+<a href="driver_standings.php">Driver Standings</a> |
+<a href="team_standings.php">Team Standings</a>
 
 <hr>
 
@@ -85,11 +89,11 @@ $position = 1;
         <?php while($row = $result->fetch_assoc()): ?>
             <tr>
                 <td><?php echo $position++; ?></td>
-                <td><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
-                <td><?php echo $row['team_name'] ?? 'No Team'; ?></td>
-                <td><?php echo $row['total_points']; ?></td>
-                <td><?php echo $row['podiums']; ?></td>
-                <td><?php echo $row['avg_finish'] ?? 'N/A'; ?></td>
+                <td><?php echo htmlspecialchars($row['first_name'] . " " . $row['last_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['team_name'] ?? 'No Team'); ?></td>
+                <td><?php echo htmlspecialchars($row['total_points']); ?></td>
+                <td><?php echo htmlspecialchars($row['podiums']); ?></td>
+                <td><?php echo htmlspecialchars($row['avg_finish'] ?? 'N/A'); ?></td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>

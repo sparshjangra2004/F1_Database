@@ -3,7 +3,7 @@ require_once '../auth.php';
 require_once '../../config/dbconn.php';
 
 $query = "
-    SELECT 
+    SELECT
         r.race_id,
         r.race_name,
         r.race_date,
@@ -14,10 +14,34 @@ $query = "
     FROM Races r
     JOIN Seasons s ON r.season_id = s.season_id
     JOIN Circuits c ON r.circuit_id = c.circuit_id
-    ORDER BY r.race_date DESC
 ";
 
-$result = $conn->query($query);
+$params = [];
+$types = "";
+
+if (isset($_GET['search']) && trim($_GET['search']) !== "") {
+
+    $search = "%" . trim($_GET['search']) . "%";
+
+    $query .= " WHERE
+                r.race_name LIKE ?
+                OR r.weather_condition LIKE ?
+                OR c.circuit_name LIKE ?";
+
+    $types = "sss";
+    $params = [$search, $search, $search];
+}
+
+$query .= " ORDER BY r.race_date DESC";
+
+$stmt = $conn->prepare($query);
+
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +55,14 @@ $result = $conn->query($query);
 <br><br>
 
 <a href="create.php"> Add New Race</a>
+
+<br><br>
+<form method="GET">
+    <label>Search Race:</label>
+    <input type="text" name="search"
+           value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+    <button type="submit">Search</button>
+</form>
 
 <hr>
 
@@ -48,18 +80,19 @@ $result = $conn->query($query);
     <?php if ($result && $result->num_rows > 0): ?>
         <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><?php echo $row['race_name']; ?></td>
-                <td><?php echo $row['race_date']; ?></td>
-                <td><?php echo $row['season_year']; ?></td>
-                <td><?php echo $row['circuit_name']; ?></td>
-                <td><?php echo $row['weather_condition']; ?></td>
-                <td><?php echo $row['laps']; ?></td>
+                <td><?php echo htmlspecialchars($row['race_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['race_date']); ?></td>
+                <td><?php echo htmlspecialchars($row['season_year']); ?></td>
+                <td><?php echo htmlspecialchars($row['circuit_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['weather_condition']); ?></td>
+                <td><?php echo htmlspecialchars($row['laps']); ?></td>
                 <td>
                     <a href="update.php?id=<?php echo $row['race_id']; ?>">Edit</a> |
-                    <a href="delete.php?id=<?php echo $row['race_id']; ?>"
-                       onclick="return confirm('Delete this race?');">
-                       Delete
-                    </a>
+                    <form method="POST" action="delete.php"
+                          onsubmit="return confirm('Delete this race?');">
+                        <input type="hidden" name="id" value="<?php echo $row['race_id']; ?>">
+                        <button type="submit">Delete</button>
+                    </form>
                 </td>
             </tr>
         <?php endwhile; ?>

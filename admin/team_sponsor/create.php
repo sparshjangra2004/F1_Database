@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <option value="">Select Team</option>
         <?php while ($team = $teams->fetch_assoc()): ?>
             <option value="<?php echo $team['team_id']; ?>">
-                <?php echo $team['team_name']; ?>
+                <?php echo htmlspecialchars($team['team_name']); ?>
             </option>
         <?php endwhile; ?>
     </select><br><br>
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <option value="">Select Sponsor</option>
         <?php while ($s = $sponsors->fetch_assoc()): ?>
             <option value="<?php echo $s['sponsor_id']; ?>">
-                <?php echo $s['sponsor_name']; ?>
+                <?php echo htmlspecialchars($s['sponsor_name']); ?>
             </option>
         <?php endwhile; ?>
     </select><br><br>

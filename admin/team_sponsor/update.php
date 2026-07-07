@@ -79,8 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <hr>
 
 <p>
-<b>Team:</b> <?php echo $record['team_name']; ?><br>
-<b>Sponsor:</b> <?php echo $record['sponsor_name']; ?>
+<b>Team:</b> <?php echo htmlspecialchars($record['team_name']); ?><br>
+<b>Sponsor:</b> <?php echo htmlspecialchars($record['sponsor_name']); ?>
 </p>
 
 <?php if (isset($error)) echo "<p>$error</p>"; ?>
@@ -89,11 +89,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <label>Contract Start:</label><br>
     <input type="date" name="contract_start"
-           value="<?php echo $record['contract_start']; ?>" required><br><br>
+           value="<?php echo htmlspecialchars($record['contract_start']); ?>" required><br><br>
 
     <label>Contract End:</label><br>
     <input type="date" name="contract_end"
-           value="<?php echo $record['contract_end']; ?>" required><br><br>
+           value="<?php echo htmlspecialchars($record['contract_end']); ?>" required><br><br>
 
     <button type="submit">Update Contract</button>
 

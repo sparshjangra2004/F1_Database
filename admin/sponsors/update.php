@@ -74,15 +74,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <label>Sponsor Name:</label><br>
     <input type="text" name="sponsor_name"
-           value="<?php echo $sponsor['sponsor_name']; ?>" required><br><br>
+           value="<?php echo htmlspecialchars($sponsor['sponsor_name']); ?>" required><br><br>
 
     <label>Industry:</label><br>
     <input type="text" name="industry"
-           value="<?php echo $sponsor['industry']; ?>" required><br><br>
+           value="<?php echo htmlspecialchars($sponsor['industry']); ?>" required><br><br>
 
     <label>Country:</label><br>
     <input type="text" name="country"
-           value="<?php echo $sponsor['country']; ?>" required><br><br>
+           value="<?php echo htmlspecialchars($sponsor['country']); ?>" required><br><br>
 
     <button type="submit">Update Sponsor</button>
 

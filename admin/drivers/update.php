@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
+    $date_of_birth = $_POST['date_of_birth'] !== '' ? $_POST['date_of_birth'] : NULL;
     $driver_number = intval($_POST['driver_number']);
     $nationality = trim($_POST['nationality']);
     $team_id = !empty($_POST['team_id']) ? intval($_POST['team_id']) : NULL;
@@ -34,18 +35,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $update = $conn->prepare("
             UPDATE Drivers
-            SET first_name = ?, 
-                last_name = ?, 
-                driver_number = ?, 
-                nationality = ?, 
-                team_id = ?, 
+            SET first_name = ?,
+                last_name = ?,
+                date_of_birth = ?,
+                driver_number = ?,
+                nationality = ?,
+                team_id = ?,
                 status = ?
             WHERE driver_id = ?
         ");
 
-        $update->bind_param("ssisssi",
+        $update->bind_param("sssisisi",
             $first_name,
             $last_name,
+            $date_of_birth,
             $driver_number,
             $nationality,
             $team_id,
@@ -85,20 +88,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <form method="POST">
 
     <label>First Name:</label><br>
-    <input type="text" name="first_name" 
-           value="<?php echo $driver['first_name']; ?>" required><br><br>
+    <input type="text" name="first_name"
+           value="<?php echo htmlspecialchars($driver['first_name']); ?>" required><br><br>
 
     <label>Last Name:</label><br>
-    <input type="text" name="last_name" 
-           value="<?php echo $driver['last_name']; ?>" required><br><br>
+    <input type="text" name="last_name"
+           value="<?php echo htmlspecialchars($driver['last_name']); ?>" required><br><br>
+
+    <label>Date of Birth:</label><br>
+    <input type="date" name="date_of_birth"
+           value="<?php echo htmlspecialchars($driver['date_of_birth'] ?? ''); ?>"><br><br>
 
     <label>Driver Number:</label><br>
-    <input type="number" name="driver_number" 
-           value="<?php echo $driver['driver_number']; ?>" required><br><br>
+    <input type="number" name="driver_number"
+           value="<?php echo htmlspecialchars($driver['driver_number']); ?>" required><br><br>
 
     <label>Nationality:</label><br>
-    <input type="text" name="nationality" 
-           value="<?php echo $driver['nationality']; ?>" required><br><br>
+    <input type="text" name="nationality"
+           value="<?php echo htmlspecialchars($driver['nationality']); ?>" required><br><br>
 
     <label>Team:</label><br>
     <select name="team_id">
@@ -106,14 +113,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php while ($team = $teams->fetch_assoc()): ?>
             <option value="<?php echo $team['team_id']; ?>"
                 <?php if ($driver['team_id'] == $team['team_id']) echo "selected"; ?>>
-                <?php echo $team['team_name']; ?>
+                <?php echo htmlspecialchars($team['team_name']); ?>
             </option>
         <?php endwhile; ?>
     </select><br><br>
 
     <label>Status:</label><br>
     <select name="status" required>
-        <option value="Active" 
+        <option value="Active"
             <?php if ($driver['status'] == 'Active') echo "selected"; ?>>
             Active
         </option>

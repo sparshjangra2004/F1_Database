@@ -70,17 +70,18 @@ $result = $stmt->get_result();
     <?php if($result && $result-> num_rows>0):?>
         <?php while($row = $result-> fetch_assoc()):?>
              <tr>
-                <td><?php echo $row['team_name']; ?></td>
-                <td><?php echo $row['country']; ?></td>
-                <td><?php echo $row['team_principal']; ?></td>
-                <td><?php echo $row['founded_year']; ?></td>
-                <td><?php echo $row['engine_supplier']; ?></td>
+                <td><?php echo htmlspecialchars($row['team_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['country']); ?></td>
+                <td><?php echo htmlspecialchars($row['team_principal']); ?></td>
+                <td><?php echo htmlspecialchars($row['founded_year']); ?></td>
+                <td><?php echo htmlspecialchars($row['engine_supplier']); ?></td>
                 <td>
                     <a href="update.php?id=<?php echo $row['team_id']; ?>">Edit</a> |
-                    <a href="delete.php?id=<?php echo $row['team_id']; ?>" 
-                       onclick="return confirm('Are you sure you want to delete this team?');">
-                       Delete
-                    </a>
+                    <form method="POST" action="delete.php"
+                          onsubmit="return confirm('Are you sure you want to delete this team?');">
+                        <input type="hidden" name="id" value="<?php echo $row['team_id']; ?>">
+                        <button type="submit">Delete</button>
+                    </form>
                 </td>
             </tr>
         <?php endwhile; ?>

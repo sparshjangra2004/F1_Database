@@ -3,10 +3,11 @@ require_once '../auth.php';
 require_once '../../config/dbconn.php';
 
 
-$sql = "SELECT 
+$sql = "SELECT
         d.driver_id,
         d.first_name,
         d.last_name,
+        d.date_of_birth,
         d.driver_number,
         d.nationality,
         d.status,
@@ -21,14 +22,15 @@ if (isset($_GET['search']) && trim($_GET['search']) !== "") {
 
     $search = "%" . trim($_GET['search']) . "%";
 
-    $sql .= " WHERE 
+    $sql .= " WHERE
                 d.first_name LIKE ?
                 OR d.last_name LIKE ?
+                OR CONCAT(d.first_name, ' ', d.last_name) LIKE ?
                 OR d.nationality LIKE ?
                 OR d.driver_number LIKE ?";
 
-    $types = "ssss";
-    $params = [$search, $search, $search, $search];
+    $types = "sssss";
+    $params = [$search, $search, $search, $search, $search];
 }
 
 $sql .= " ORDER BY d.last_name ASC";
@@ -41,6 +43,8 @@ if (!empty($params)) {
 
 $stmt->execute();
 $result = $stmt->get_result();
+
+$suggestions = $conn->query("SELECT first_name, last_name FROM Drivers ORDER BY last_name ASC");
 ?>
 <!DOCTYPE html>
 <head>
@@ -53,8 +57,13 @@ $result = $stmt->get_result();
 <hr>
 <form method="GET">
     <label>Search Driver:</label>
-    <input type="text" name="search"
+    <input type="text" name="search" list="driverSuggestions"
            value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+    <datalist id="driverSuggestions">
+        <?php while ($s = $suggestions->fetch_assoc()): ?>
+            <option value="<?php echo htmlspecialchars($s['first_name'] . " " . $s['last_name']); ?>">
+        <?php endwhile; ?>
+    </datalist>
     <button type="submit">Search</button>
 </form>
 <br>
@@ -63,6 +72,7 @@ $result = $stmt->get_result();
 <table border="1" cellpadding="8" cellspacing="0">
     <tr>
         <th>Name</th>
+        <th>Date of Birth</th>
         <th>Number</th>
         <th>Nationality</th>
         <th>Team</th>
@@ -72,23 +82,25 @@ $result = $stmt->get_result();
     <?php if($result && $result->num_rows>0):?>
         <?php while( $row = $result->fetch_assoc()):?>
         <tr>
-                <td><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
-                <td><?php echo $row['driver_number']; ?></td>
-                <td><?php echo $row['nationality']; ?></td>
-                <td><?php echo $row['team_name'] ?? 'No Team'; ?></td>
-                <td><?php echo $row['status']; ?></td>
+                <td><?php echo htmlspecialchars($row['first_name'] . " " . $row['last_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['date_of_birth'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['driver_number']); ?></td>
+                <td><?php echo htmlspecialchars($row['nationality']); ?></td>
+                <td><?php echo htmlspecialchars($row['team_name'] ?? 'No Team'); ?></td>
+                <td><?php echo htmlspecialchars($row['status']); ?></td>
                 <td>
                     <a href="update.php?id=<?php echo $row['driver_id']; ?>">Edit</a> |
-                    <a href="delete.php?id=<?php echo $row['driver_id']; ?>"
-                       onclick="return confirm('Are you sure you want to delete this driver?');">
-                       Delete
-                    </a>
+                    <form method="POST" action="delete.php"
+                          onsubmit="return confirm('Are you sure you want to delete this driver?');">
+                        <input type="hidden" name="id" value="<?php echo $row['driver_id']; ?>">
+                        <button type="submit">Delete</button>
+                    </form>
                 </td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>
         <tr>
-            <td colspan="6">No drivers found.</td>
+            <td colspan="7">No drivers found.</td>
         </tr>
     <?php endif; ?>
 </table>

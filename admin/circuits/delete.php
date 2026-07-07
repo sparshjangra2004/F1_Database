@@ -8,19 +8,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 
 if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
-    die("Invalid ID.");
+    die("Invalid Circuit ID.");
 }
 
-$id = intval($_POST['id']);
+$circuit_id = intval($_POST['id']);
 
-$stmt = $conn->prepare("DELETE FROM Team_Sponsors WHERE team_sponsor_id = ?");
-$stmt->bind_param("i", $id);
+$stmt = $conn->prepare("DELETE FROM Circuits WHERE circuit_id = ?");
+$stmt->bind_param("i", $circuit_id);
 
 if ($stmt->execute()) {
     header("Location: list.php");
     exit();
 } else {
-    echo "Error deleting.";
+    echo "Error deleting circuit. It may still be referenced by a race.";
 }
 
 $stmt->close();

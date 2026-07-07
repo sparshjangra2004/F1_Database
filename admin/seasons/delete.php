@@ -8,19 +8,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 
 if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
-    die("Invalid ID.");
+    die("Invalid Season ID.");
 }
 
-$id = intval($_POST['id']);
+$season_id = intval($_POST['id']);
 
-$stmt = $conn->prepare("DELETE FROM Team_Sponsors WHERE team_sponsor_id = ?");
-$stmt->bind_param("i", $id);
+$stmt = $conn->prepare("DELETE FROM Seasons WHERE season_id = ?");
+$stmt->bind_param("i", $season_id);
 
 if ($stmt->execute()) {
     header("Location: list.php");
     exit();
 } else {
-    echo "Error deleting.";
+    echo "Error deleting season.";
 }
 
 $stmt->close();

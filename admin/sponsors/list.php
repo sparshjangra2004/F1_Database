@@ -3,7 +3,7 @@ require_once '../auth.php';
 require_once '../../config/dbconn.php';
 
 $query = "
-    SELECT 
+    SELECT
         s.sponsor_id,
         s.sponsor_name,
         s.industry,
@@ -11,7 +11,26 @@ $query = "
         COUNT(ts.team_id) AS total_teams
     FROM Sponsors s
     LEFT JOIN Team_Sponsors ts ON s.sponsor_id = ts.sponsor_id
-    GROUP BY 
+";
+
+$params = [];
+$types = "";
+
+if (isset($_GET['search']) && trim($_GET['search']) !== "") {
+
+    $search = "%" . trim($_GET['search']) . "%";
+
+    $query .= " WHERE
+                s.sponsor_name LIKE ?
+                OR s.industry LIKE ?
+                OR s.country LIKE ?";
+
+    $types = "sss";
+    $params = [$search, $search, $search];
+}
+
+$query .= "
+    GROUP BY
         s.sponsor_id,
         s.sponsor_name,
         s.industry,
@@ -19,7 +38,14 @@ $query = "
     ORDER BY s.sponsor_name ASC
 ";
 
-$result = $conn->query($query);
+$stmt = $conn->prepare($query);
+
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -33,6 +59,14 @@ $result = $conn->query($query);
 <br><br>
 
 <a href="create.php">Add New Sponsor</a>
+
+<br><br>
+<form method="GET">
+    <label>Search Sponsor:</label>
+    <input type="text" name="search"
+           value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+    <button type="submit">Search</button>
+</form>
 
 <hr>
 
@@ -48,16 +82,17 @@ $result = $conn->query($query);
     <?php if ($result && $result->num_rows > 0): ?>
         <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><?php echo $row['sponsor_name']; ?></td>
-                <td><?php echo $row['industry']; ?></td>
-                <td><?php echo $row['country']; ?></td>
-                <td><?php echo $row['total_teams']; ?></td>
+                <td><?php echo htmlspecialchars($row['sponsor_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['industry']); ?></td>
+                <td><?php echo htmlspecialchars($row['country']); ?></td>
+                <td><?php echo htmlspecialchars($row['total_teams']); ?></td>
                 <td>
                     <a href="update.php?id=<?php echo $row['sponsor_id']; ?>">Edit</a> |
-                    <a href="delete.php?id=<?php echo $row['sponsor_id']; ?>"
-                       onclick="return confirm('Delete this sponsor?');">
-                       Delete
-                    </a>
+                    <form method="POST" action="delete.php"
+                          onsubmit="return confirm('Delete this sponsor?');">
+                        <input type="hidden" name="id" value="<?php echo $row['sponsor_id']; ?>">
+                        <button type="submit">Delete</button>
+                    </form>
                 </td>
             </tr>
         <?php endwhile; ?>
